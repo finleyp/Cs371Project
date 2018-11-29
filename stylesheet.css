@@ -1,2 +1,7 @@
 .hidden{display:none;}
 
+.navBar{
+    background-color: black;
+    color: white;
+    overflow: hidden;
+}

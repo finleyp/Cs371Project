@@ -2,40 +2,18 @@
 <html>
 
 <head>
-  <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons' rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
   <link rel='stylesheet' type='text/css' href='stylesheet.css' />
   <title>CIS371 Forum</title>
 </head>
+
 <body>
-
-  <div id="app">
-    <v-app>
-      <v-toolbar app>
-        <v-toolbar-title>Forum Project</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-toolbar-items>
-          <v-icon @click="login">restore</v-icon>
-        </v-toolbar-items>
-      </v-toolbar>
-      <v-content>
-        <v-container fluid fill-height white lighten-4>
-          <v-layout id="Login" class="hidden" row>
-              <h3>Login!(Change me later)</h3><br>
-              <input type="text" placeholder="Email"><br>
-              <input type="password" placeholder="Password"><br>
-              <button onclick="addUser">Sign in</button>
-          </v-layout>
-        </v-container>
-      </v-content>
-    </v-app>
-</body>
-
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
-<script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
-<script>
+  <div class="navBar">
+    <h1> FORUM.RS </h1>
+    <p>//basically just put in hrefs to functions over text</p>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+  <script>
+    
   // Initialize Firebase
   var config = {
     apiKey: "AIzaSyBFkmGeQ0atLiNQFPtVpQpUBeQGnCPI1Fo",
@@ -47,38 +25,83 @@
   };
   firebase.initializeApp(config);
 
-  var userRef = firebase.database().ref('users');
+  var stack = [];
 
-  new Vue({
-    el: '#app',
-    data: {
-      newUser: {
-        name: '',
-        email: ''
-      }
-    },
+  //build home html
+  function home() {
+    let div = document.getElementById("home");
 
-    firebase: {
-      users: userRef
-    },
-
-    methods: {
-      addUser: function () {
-        userRef.push(this.newUser)
-        //jump back to home page
-      },
-
-      removeUser: function (user) {
-        userRef.child(user['.key']).remove();
-      },
-
-      login: function () {
-        let login = document.getElementById("login");
-        login.removeAttribute("hidden");
-
+    if (!div) {
+      div = document.createElement("div");
+      div.setAttribute("id", "home");
+      body.appendChild(div);
+      stack.push(div);
+    } else {
+      while (div.firstChild) {
+        div.removeChild(div.firstChild);
       }
     }
-  })
-</script>
+
+  }
+
+  // builds login html
+  function login() {
+    let div = document.getElementById("login");
+
+    if (!div) {
+      div = document.createElement("div");
+      div.setAttribute("id", "login");
+      stack.push(div);
+    } else {
+      while (div.firstChild) {
+        div.removeChild(div.firstChild);
+      }
+    }
+
+    let h3 = document.createElement("h3");
+    let text = document.createTextNode("LOGIN HERE (change me later)");
+    h3.appendChild(text);
+    div.appendChild(h3);
+
+    let user = document.createElement("text");
+    user.setAttribute("placeholder", "Email");
+    user.setAttribute("id", "data-email");
+    div.appendChild(user);
+
+    let password = document.createElement("password");
+    password.setAttribute("placeholder", "Password");
+    user.setAttribute("id", "data-password");
+    div.appendChild(user);
+
+    let login = document.createElement("input");
+    login.setAttribute("type", "button");
+    login.setAttribute("value", "Log in");
+    login.onclick = filebaseLog;
+
+  }
+
+  function firebaseLog() {
+
+    let email = document.getElementById('data-email').value;
+    let password = document.getElementById('data-password');
+
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+      .catch(function (err) {
+        // change div and tell them login failed
+      });
+
+    //Sign in existing user
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .catch(function (err) {
+        // change div and tell them login failed
+      });
+
+
+  }
+  </script>
+</body>
+
+
+
 
 </html>
