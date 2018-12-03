@@ -44,7 +44,7 @@ function forumPage() {
 
 
 function submitPost(title, body) {
-    console.log(`title: ${title} \t body: ${body}`);
+    // console.log(`title: ${title} \t body: ${body}`);
     const rootRef = firebase.database().ref();
     var forumRef = rootRef.child("forums");
     var postObj = {
@@ -129,11 +129,28 @@ function home() {
         div.setAttribute("id", "home");
         body.appendChild(div);
         stack.push(div);
-        
+
     } else {
         while (div.firstChild) {
             div.removeChild(div.firstChild);
         }
     }
+
+}
+
+
+/**
+ * Search for a forum in Firebase by string.
+ * 
+ * @param {string} inputStr 
+ */
+function searchForForum(inputStr) {
+    console.log(`input str = ${inputStr}`);
+    const rootRef = firebase.database().ref();
+    var forumRef = rootRef.child("forums");
+
+    forumRef.orderByChild("title").equalTo(inputStr).on("child_added", function (snapshot) {
+        console.log(snapshot.val());
+    });
 
 }

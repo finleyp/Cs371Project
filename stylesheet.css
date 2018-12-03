@@ -17,3 +17,19 @@
 .middle {
     text-align: center;
 }
+
+.searchBar {
+    background-color: gray;
+    color: white;
+    overflow: hidden;
+    text-align: center;
+}
+
+.searchInput {
+    background-color: lightgray;
+    text-align: center;
+    color: black;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 20px;
+}
