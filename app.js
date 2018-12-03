@@ -88,7 +88,7 @@ function login() {
 
     let login = document.createElement("input");
     login.setAttribute("type", "button");
-    login.setAttribute("value", "Log in");
+    login.setAttribute("results", "Log in");
     login.onclick = filebaseLog;
 
 }
@@ -100,7 +100,7 @@ function login() {
  */
 function firebaseLog(ev) {
 
-    let email = document.getElementById('data-email').value;
+    let email = document.getElementById('data-email').results;
     let password = document.getElementById('data-password');
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -113,7 +113,6 @@ function firebaseLog(ev) {
         .catch(function (err) {
             // change div and tell them login failed
         });
-
 
 }
 
@@ -142,15 +141,40 @@ function home() {
 /**
  * Search for a forum in Firebase by string.
  * 
- * @param {string} inputStr 
+ * @param {string} inputStr
  */
 function searchForForum(inputStr) {
-    console.log(`input str = ${inputStr}`);
     const rootRef = firebase.database().ref();
     var forumRef = rootRef.child("forums");
 
     forumRef.orderByChild("title").equalTo(inputStr).on("child_added", function (snapshot) {
-        console.log(snapshot.val());
+        populateResultsTable(snapshot.val());
     });
 
+}
+
+
+/**
+ * Put result data into table.
+ * 
+ * @param {Object} data 
+ */
+function populateResultsTable(data) {
+    console.log(data);
+    var resultDiv = document.getElementById("results-div");
+    resultDiv.classList.remove('hidden');
+
+    var resultTable = document.getElementById("results-table");
+    var tmpRow = document.createElement("TR");
+    resultTable.appendChild(tmpRow);
+
+    var tmpCol = document.createElement("TD");
+    tmpRow.appendChild(tmpCol);
+    var colText = document.createTextNode(data.title);
+    tmpCol.appendChild(colText);
+
+    tmpCol = document.createElement("TD");
+    tmpRow.appendChild(tmpCol);
+    colText = document.createTextNode(data.body);
+    tmpCol.appendChild(colText);
 }

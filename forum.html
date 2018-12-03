@@ -23,7 +23,7 @@
     <div class="searchBar">
       <input v-model="searchInput" class="searchInput" placeholder="Seach">
       <!-- <v-btn id="search-button" @click="searchForums">Search</v-btn> -->
-      <v-btn id="search-button" small round @click="searchForums">
+      <v-btn id="search-button" depressed small round color="grey" @click="searchForums">
         <v-icon dark>search</v-icon>
       </v-btn>
     </div>
@@ -43,6 +43,18 @@
         </v-layout>
       </v-container>
     </div>
+  </div>
+
+  <div id="results-div" class="hidden">
+    <br>
+    <h2 class="results-h">Results</h2>
+    <hr><br>
+    <table id="results-table">
+      <tr>
+        <th>Title</th>
+        <th>Body</th>
+      </tr>
+    </table>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
