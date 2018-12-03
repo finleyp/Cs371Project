@@ -26,7 +26,6 @@
             <input v-model="postTitle" class="userInput" placeholder="Enter title">
             <br><br>
             <textarea v-model="postBody" class="userInput" placeholder="Enter body"></textarea>
-            <!--<v-btn @click="submitForumPost">Submit</v-btn>-->
             <v-btn @click="submitForumPost">Submit</v-btn>
             <v-btn @click="cancelForumPost">Cancel</v-btn>
           </v-container>
@@ -52,8 +51,7 @@
           forumDiv.classList.remove('hidden');
         },
         submitForumPost() {
-          console.log(this.postTitle);
-          console.log(this.postBody);
+          submitPost(this.postTitle, this.postBody);
         },
         cancelForumPost() {
           this.postTitle = '';
