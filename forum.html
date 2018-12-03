@@ -13,24 +13,26 @@
 </head>
 
 <body>
-  <!--
-  <div class="navBar">
-    <h1> FORUM.RS </h1>
-    <p>//basically just put in hrefs to functions over text</p>
-    <button onclick="forumPage()">New Post</button>
-  </div>
-  <div id="new-forum" class="hidden">
-    <p>
-      hai
-    </p>
-  </div>
-  -->
-
   <div id="app">
     <div class="navBar">
       <h1>{{ title }}</h1>
     </div>
     <v-btn @click="forumPost">New Post</v-btn>
+    <div id="new-forum" class="hidden">
+      <v-container fill-height red darken-2>
+        <v-layout id="titleEntry" row>
+          <v-container fluid grey lighten-2>
+            <h3>Title: {{ postTitle }}</h3>
+            <input v-model="postTitle" class="userInput" placeholder="Enter title">
+            <br><br>
+            <textarea v-model="postBody" class="userInput" placeholder="Enter body"></textarea>
+            <!--<v-btn @click="submitForumPost">Submit</v-btn>-->
+            <v-btn @click="submitForumPost">Submit</v-btn>
+            <v-btn @click="cancelForumPost">Cancel</v-btn>
+          </v-container>
+        </v-layout>
+      </v-container>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -40,10 +42,24 @@
       el: '#app',
       data: {
         title: "FORUM.RS",
+        postTitle: '',
+        postBody: '',
       },
       methods: {
         forumPost() {
-          console.log("HERE");
+          var forumDiv = document.getElementById("new-forum");
+          // TODO: Hide all other divs with elements that need to be hidden.
+          forumDiv.classList.remove('hidden');
+        },
+        submitForumPost() {
+          console.log(this.postTitle);
+          console.log(this.postBody);
+        },
+        cancelForumPost() {
+          this.postTitle = '';
+          this.postBody = '';
+          var forumDiv = document.getElementById("new-forum");
+          forumDiv.classList.add('hidden');
         }
       }
     })

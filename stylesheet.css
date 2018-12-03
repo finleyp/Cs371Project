@@ -7,3 +7,13 @@
     color: white;
     overflow: hidden;
 }
+
+.userInput {
+    background-color: white;
+    border-color: black;
+    width: 100%;
+}
+
+.middle {
+    text-align: center;
+}
