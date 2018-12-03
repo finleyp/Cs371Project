@@ -37,6 +37,9 @@ var stack = [];
  */
 function forumPage() {
     console.log("forums");
+    var forumDiv = document.getElementById("new-forum");
+    // TODO: Hide all other divs with elements that need to be hidden.
+    forumDiv.classList.remove('hidden');
 }
 
 

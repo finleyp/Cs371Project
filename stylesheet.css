@@ -1,6 +1,8 @@
-.hidden{display:none;}
+.hidden {
+    display: none;
+}
 
-.navBar{
+.navBar {
     background-color: black;
     color: white;
     overflow: hidden;
