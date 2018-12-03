@@ -1,8 +1,13 @@
 <!DOCTYPE html>
+<html lang="en-US">
+
 <html>
 
 <head>
+  <meta charset="UTF-8" />
   <link rel='stylesheet' type='text/css' href='stylesheet.css' />
+  <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+  <script src="app.js"></script>
   <title>CIS371 Forum</title>
 </head>
 
@@ -10,99 +15,9 @@
   <div class="navBar">
     <h1> FORUM.RS </h1>
     <p>//basically just put in hrefs to functions over text</p>
+    <button onclick="forumPage()">New Post</button> 
   </div>
-  
-  <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
-  <script>
-    
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyBFkmGeQ0atLiNQFPtVpQpUBeQGnCPI1Fo",
-    authDomain: "cis-371-forum.firebaseapp.com",
-    databaseURL: "https://cis-371-forum.firebaseio.com",
-    projectId: "cis-371-forum",
-    storageBucket: "cis-371-forum.appspot.com",
-    messagingSenderId: "846182067183"
-  };
-  firebase.initializeApp(config);
 
-  var stack = [];
-
-  //build home html
-  function home() {
-    let div = document.getElementById("home");
-
-    if (!div) {
-      div = document.createElement("div");
-      div.setAttribute("id", "home");
-      body.appendChild(div);
-      stack.push(div);
-    } else {
-      while (div.firstChild) {
-        div.removeChild(div.firstChild);
-      }
-    }
-
-  }
-
-  // builds login html
-  function login() {
-    let div = document.getElementById("login");
-
-    if (!div) {
-      div = document.createElement("div");
-      div.setAttribute("id", "login");
-      stack.push(div);
-    } else {
-      while (div.firstChild) {
-        div.removeChild(div.firstChild);
-      }
-    }
-
-    let h3 = document.createElement("h3");
-    let text = document.createTextNode("LOGIN HERE (change me later)");
-    h3.appendChild(text);
-    div.appendChild(h3);
-
-    let user = document.createElement("text");
-    user.setAttribute("placeholder", "Email");
-    user.setAttribute("id", "data-email");
-    div.appendChild(user);
-
-    let password = document.createElement("password");
-    password.setAttribute("placeholder", "Password");
-    user.setAttribute("id", "data-password");
-    div.appendChild(user);
-
-    let login = document.createElement("input");
-    login.setAttribute("type", "button");
-    login.setAttribute("value", "Log in");
-    login.onclick = filebaseLog;
-
-  }
-
-  function firebaseLog(ev) {
-
-    let email = document.getElementById('data-email').value;
-    let password = document.getElementById('data-password');
-
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-      .catch(function (err) {
-        // change div and tell them login failed
-      });
-
-    //Sign in existing user
-    firebase.auth().signInWithEmailAndPassword(email, password)
-      .catch(function (err) {
-        // change div and tell them login failed
-      });
-
-
-  }
-  </script>
 </body>
-
-
-
 
 </html>
