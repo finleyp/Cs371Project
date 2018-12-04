@@ -29,6 +29,8 @@
         console.log("Forum child removed.");
     });
 
+    var user = null;
+    
 }());
 
 
@@ -59,11 +61,9 @@ function submitPost(title, body) {
  */
 function googleAuth(){
     var provider = new firebase.auth.GoogleAuthProvider();
-    var token,user,email;
+    
     firebase.auth().signInWithPopup(provider).then(function(result) {
-        token = result.credential.accessToken;
-        user = result.user;
-        email = result.email;
+        this.user = result.additionalUserInfo.profile;
       }).catch(function(error) {
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -73,40 +73,27 @@ function googleAuth(){
         console.log(errorMessage);
         console.log(email);
         console.log(credential);
-      }).then((e) => (newUser(token,user,email)));
-      
+      }).then((e) => (checkUser(this.user)));
 }
 
-
 /**
- * not being used atm
- * @param {*} ev 
+ * returns if the user is signed in or not
  */
-function firebaseLog(email, password) {
-
-    //gotta check if the user exist 
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-        .catch(function (err) {
-            console.log("auth failed");
-            return false;
-        });
-
-    //Sign in existing user
-    firebase.auth().signInWithEmailAndPassword(email, password)
-        .catch(function (err) {
-            console.log("log in failed");
-            return false;
-        });
-
+function loggedIn(){
+    if(this.user == null){
+        return false;
+    }
     return true;
 }
 
+
 /**
- * Just needs to be added in the html to let a user log out on click
+ * signs a user out
  */
 function firebaseLogOut(){
     firebase.auth().signOut().then(function() {
         console.log("Sign out successful");
+        this.user = null;
       }).catch(function(error) {
         console.log(error);
       });
@@ -115,35 +102,32 @@ function firebaseLogOut(){
 /**
  * Pushes a new user to database
  */
-function newUser(token, user, email){
+function newUser(user){
     const rootRef = firebase.database().ref();
     let userRef = rootRef.child("users");
-    console.log(token);
-    console.log(user);
-    console.log(email);
     let userInfo = {
-        "token": token,
-        "user": user,
-        "email": email
+        "user": user.name,
+        "email": user.email
     };
-
     userRef.push(userInfo);
 }
 
 /**
  * checks to see if a user exist yet
  */
-function checkUser(token){
+function checkUser(user){
     const rootRef = firebase.database().ref();
     let userRef = rootRef.child("users");
-    userRef.on("child_added", function (snapshot) {
-        if(snapshot.val()==token){
-            console.log("You exist congratz!!");
-            return true;
+    console.log("here");
+    userRef.orderByChild("email").equalTo(user.email).once("value").then(function (snapshot){
+        if(snapshot.exists()){
+            console.log("Found");
+        }else{
+            console.log("not found");
+            newUser(user);
         }
     });
-    //this might not work
-    return false;
+    
 }
 
 /**
