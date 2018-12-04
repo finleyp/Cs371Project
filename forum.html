@@ -18,7 +18,13 @@
 <body>
   <div id="app">
     <div class="navBar">
-      <h1>{{ title }}</h1>
+      <p>{{ title }}</p>
+      <div class="dropdown">
+          <div class="dropdown__header" @click="toggleDropdown($event)">
+              <span>Header</span> text
+              <i class="fa fa-angle-down" aria-hidden="true"></i>
+              <i class="fa fa-angle-up" aria-hidden="true"></i>
+          </div>
     </div>
     <div class="searchBar">
       <input v-model="searchInput" class="searchInput" placeholder="Seach">
@@ -26,9 +32,14 @@
       <v-btn id="search-button" depressed small round color="grey" @click="searchForums">
         <v-icon dark>search</v-icon>
       </v-btn>
+      <v-btn id="login-button" depressed small round color="grey" @click="login">
+          <v-icon dark>person</v-icon>
+        </v-btn>
     </div>
+
     <v-btn @click="forumPost">New Post</v-btn>
     <div id="new-forum" class="hidden">
+
       <v-container fill-height red darken-2>
         <v-layout id="titleEntry" row>
           <v-container fluid grey lighten-2>
@@ -43,6 +54,16 @@
         </v-layout>
       </v-container>
     </div>
+    
+  </div>
+
+  <div id="login" class="hidden">
+          <label for="email">Email</label>
+          <input type="text" id="email" v-model="email" placeholder="me@example.com" autocomplete="off"/>
+          <label for="password">Password</label>
+          <input type="password" id="password" v-model="password" placeholder="**********"/>
+          <v-btn id="auth-button" @click="firebaseLogin">Sign in</v-btn>
+
   </div>
 
   <div id="results-div" class="hidden">
@@ -66,7 +87,9 @@
         title: "FORUM.RS",
         postTitle: '',
         postBody: '',
-        searchInput: ''
+        searchInput: '',
+        email: '',
+        password: ''
       },
       methods: {
         forumPost() {
@@ -89,7 +112,20 @@
         },
         searchForums() {
           searchForForum(this.searchInput);
+        },
+        login() {
+          let loginDiv = document.getElementById("login");
+          loginDiv.classList.remove('hidden');
+        },
+        firebaseLogin() {
+          let results = firebaseLog(this.email, this.password);
+          if(results){
+            console.log("Login in worked ya chump");
+          }else{
+            console.log("failed log in");
+          }
         }
+
       }
     })
   </script>

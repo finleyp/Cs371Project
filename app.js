@@ -1,4 +1,4 @@
-var stack = [];
+
 
 /**                                                                                                                                          
  * Setup the firebase database and its reference objects.                                                                                    
@@ -55,65 +55,27 @@ function submitPost(title, body) {
 }
 
 
-/**
- * Build login HTML.
- */
-function login() {
-    let div = document.getElementById("login");
 
-    if (!div) {
-        div = document.createElement("div");
-        div.setAttribute("id", "login");
-        stack.push(div);
-    } else {
-        while (div.firstChild) {
-            div.removeChild(div.firstChild);
-        }
-    }
-
-    let h3 = document.createElement("h3");
-    let text = document.createTextNode("LOGIN HERE (change me later)");
-    h3.appendChild(text);
-    div.appendChild(h3);
-
-    let user = document.createElement("text");
-    user.setAttribute("placeholder", "Email");
-    user.setAttribute("id", "data-email");
-    div.appendChild(user);
-
-    let password = document.createElement("password");
-    password.setAttribute("placeholder", "Password");
-    user.setAttribute("id", "data-password");
-    div.appendChild(user);
-
-    let login = document.createElement("input");
-    login.setAttribute("type", "button");
-    login.setAttribute("results", "Log in");
-    login.onclick = filebaseLog;
-
-}
 
 
 /**
  * 
  * @param {*} ev 
  */
-function firebaseLog(ev) {
-
-    let email = document.getElementById('data-email').results;
-    let password = document.getElementById('data-password');
+function firebaseLog(email, password) {
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
         .catch(function (err) {
-            // change div and tell them login failed
+            return false;
         });
 
     //Sign in existing user
     firebase.auth().signInWithEmailAndPassword(email, password)
         .catch(function (err) {
-            // change div and tell them login failed
+            return false;
         });
 
+    return true;
 }
 
 
