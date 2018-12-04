@@ -19,20 +19,14 @@
   <div id="app">
     <div class="navBar">
       <p>{{ title }}</p>
-      <div class="dropdown">
-          <div class="dropdown__header" @click="toggleDropdown($event)">
-              <span>Header</span> text
-              <i class="fa fa-angle-down" aria-hidden="true"></i>
-              <i class="fa fa-angle-up" aria-hidden="true"></i>
-          </div>
-    </div>
+    <!-- </div> -->
     <div class="searchBar">
       <input v-model="searchInput" class="searchInput" placeholder="Seach">
       <!-- <v-btn id="search-button" @click="searchForums">Search</v-btn> -->
       <v-btn id="search-button" depressed small round color="grey" @click="searchForums">
         <v-icon dark>search</v-icon>
       </v-btn>
-      <v-btn id="login-button" depressed small round color="grey" @click="login">
+      <v-btn id="login-button" depressed small round color="grey" @click="firebaseLogin">
           <v-icon dark>person</v-icon>
         </v-btn>
     </div>
@@ -118,12 +112,8 @@
           loginDiv.classList.remove('hidden');
         },
         firebaseLogin() {
-          let results = firebaseLog(this.email, this.password);
-          if(results){
-            console.log("Login in worked ya chump");
-          }else{
-            console.log("failed log in");
-          }
+          //firebaseLog(this.email, this.password);
+          googleAuth();
         }
 
       }
