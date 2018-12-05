@@ -51,7 +51,9 @@ function submitPost(title, body) {
     var forumRef = rootRef.child("forums");
     var postObj = {
         "title": title,
-        "body": body
+        "body": body,
+        "op_id": user.id,
+        "op_name": user.name
     };
     forumRef.push().set(postObj);
 }
@@ -99,6 +101,8 @@ function firebaseLogOut(){
       });
       v.name = '';
       v.email = '';
+      v.pic = null;
+      v.id = null;
 }
 
 /**
@@ -109,7 +113,9 @@ function newUser(user){
     let userRef = rootRef.child("users");
     let userInfo = {
         "user": user.name,
-        "email": user.email
+        "email": user.email,
+        "id": user.id,
+        "pic": user.picture
     };
     userRef.push(userInfo);
 }
@@ -131,6 +137,8 @@ function checkUser(user){
     });
     v.name = user.name;
     v.email = user.email;
+    v.pic = user.picture;
+    v.id = user.id;
 }
 
 /**
@@ -175,7 +183,6 @@ function searchForForum(inputStr) {
 
     resultTable.replaceChild(newBody, oldBody);
     resultDiv.classList.remove('hidden');
-
 }
 
 
@@ -194,8 +201,14 @@ function appendRowToBody(data, newBody) {
     var col = document.createElement("TD");
     row.appendChild(col);
 
+    var colText = document.createTextNode(data.op_name);
+    col.appendChild(colText);
+     // Data for title of forum.
+    col = document.createElement("TD");
+    row.appendChild(col);
+
     // Title text in column.
-    var colText = document.createTextNode(data.title);
+    colText = document.createTextNode(data.title);
     col.appendChild(colText);
 
     // Data for body of forum.
@@ -205,4 +218,20 @@ function appendRowToBody(data, newBody) {
     // Body text in column.
     colText = document.createTextNode(data.body);
     col.appendChild(colText);
+}
+
+function userForum(){
+    const rootRef = firebase.database().ref();
+    var forumRef = rootRef.child("forums");
+    var userTable = document.getElementById("user-table");
+    var oldBody = document.getElementById("user-body");
+    var newBody = document.createElement("TBODY");
+    newBody.setAttribute("id", "user-body");
+
+    // TODO: Get all posts and search for similar strings in body and titles.
+    forumRef.orderByChild("op_id").equalTo(v.id).on("child_added", function (snapshot) {
+        appendRowToBody(snapshot.val(), newBody);
+    });
+
+    userTable.replaceChild(newBody, oldBody);
 }
