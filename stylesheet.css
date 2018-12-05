@@ -1,26 +1,55 @@
 @import url('https://fonts.googleapis.com/css?family=PT+Sans');
 
+* {
+    font-family: Arial
+}
+
 body {
-    background-color: #f1f1f2;
+    background-color: #d5d6d2;
 }
 
 table {
     margin: 0 auto;
+    border-collapse: collapse;
+    border-spacing: 10px;
 }
 
 th {
     background-color: black;
     color: white;
-    border-collapse: collapse;
-    padding: 7px;
+    padding: 10px;
     text-align: center;
 }
 
 td {
-    border-collapse: collapse;
-    padding: 7px;
     text-align: center;
+    padding-top: 12px;
+    padding-bottom: 12px;
 }
+
+tr td:first-child {
+    -moz-border-radius-topleft: 10px;
+    -moz-border-radius-bottomleft: 10px;
+    -webkit-border-top-left-radius: 10px;
+    -webkit-border-bottom-left-radius: 10px;
+
+}
+
+tr td:last-child {
+    -moz-border-radius-topright: 10px;
+    -moz-border-radius-bottomright: 10px;
+    -webkit-border-top-right-radius: 10px;
+    -webkit-border-bottom-right-radius: 10px;
+}
+
+table th:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+table th:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
 
 table {
     table-layout: fixed;
@@ -28,12 +57,12 @@ table {
 }
 
 tr:nth-child(odd) {
-    background-color: #bcbabe;
-    color: #021C1E;
+    background-color: #756867;
+    color: white;
 }
 
 tr:nth-child(even) {
-    background-color: firebrick;
+    background-color: #2d3033;
     color: white;
 }
 
@@ -73,7 +102,7 @@ tr:nth-child(even) {
     text-align: center;
 }
 
-.left{
+.left {
     float: left;
 }
 
@@ -91,4 +120,10 @@ tr:nth-child(even) {
     padding-top: 5px;
     padding-bottom: 5px;
     border-radius: 20px;
+}
+
+.round {
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
 }

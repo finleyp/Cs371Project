@@ -25,12 +25,12 @@
         <v-spacer></v-spacer>
         <v-toolbar-items>
           <div class="searchBar">
-            <v-btn depressed small round color="grey" @click="forumPost">
-              <v-icon dark>add</v-icon>
-            </v-btn>
             <input v-model="searchInput" class="searchInput" placeholder="Seach">
             <v-btn id="search-button" depressed small round color="grey" @click="searchForums">
               <v-icon dark>search</v-icon>
+            </v-btn>
+            <v-btn depressed small round color="grey" @click="forumPost">
+              <v-icon dark>add</v-icon>
             </v-btn>
             <v-btn id="home-button" depressed small round color="grey" @click="setHome">
               <v-icon dark>home</v-icon>
@@ -48,9 +48,9 @@
 
     <br><br>
     <div id="new-forum" class="hidden">
-      <v-container fill-height red darken-2>
+      <v-container fill-height black class="round">
         <v-layout id="titleEntry" row>
-          <v-container fluid grey lighten-2>
+          <v-container fluid grey lighten class="round">
             <h3>Title: {{ postTitle }}</h3>
             <input v-model="postTitle" class="userInput" placeholder="Enter title">
             <br><br>
@@ -165,7 +165,6 @@
       },
       submitForumPost() {
         if (this.postTitle.length > 0 && this.postBody.length != 0) {
-          console.log(`user in vue = ${this.user}`);
           submitPost(this.postTitle, this.postBody, this.user);
           this.cancelForumPost();
         }
@@ -188,10 +187,8 @@
       },
       logToggle() {
         if (loggedIn()) {
-          console.log("sign out");
           firebaseLogOut();
         } else {
-          console.log("sign in");
           googleAuth();
         }
       },

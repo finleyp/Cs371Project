@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     firebase.initializeApp(config);
 
-    //used for current snapshot object
+    // Used for current snapshot object.
     var snap = null;
 
     // Create reference to root of database                                                                                                  
@@ -23,38 +23,39 @@ document.addEventListener("DOMContentLoaded", function () {
     var oldBody = document.getElementById("home-body");
     var newBody = document.createElement("TBODY");
     newBody.setAttribute("id", "home-body");
+
     // Update table when child is added.                                                                                                     
     forumRef.on('child_added', snapshot => {
-        console.log("Forum child added.");
         snap = snapshot.key;
         appendRowToBody(snap, snapshot.val(), newBody, false);
     });
 
     // Update table when child is removed.                                                                                                   
     forumRef.on('child_removed', snapshot => {
-        console.log("Forum child removed.");
-        console.log(snapshot.key);
         delDiv(snapshot.key);
     });
-    //user login
     var user = null;
 
     homeTable.replaceChild(newBody, oldBody);
 });
 
+
 /**
  * Build the forum creation page.
  */
 function forumPage() {
-    console.log("forums");
     var forumDiv = document.getElementById("new-forum");
-    // TODO: Hide all other divs with elements that need to be hidden.
     forumDiv.classList.remove('hidden');
 }
 
 
+/**
+ * Submits a forum post.
+ * 
+ * @param {*} title 
+ * @param {*} body 
+ */
 function submitPost(title, body) {
-    // console.log(`title: ${title} \t body: ${body}`);
     const rootRef = firebase.database().ref();
     var forumRef = rootRef.child("forums");
     var postObj = {
@@ -65,6 +66,7 @@ function submitPost(title, body) {
     };
     forumRef.push().set(postObj);
 }
+
 
 /**
  * Lets a user sign in with a google pop up
@@ -79,10 +81,6 @@ function googleAuth() {
         var errorMessage = error.message;
         var email = error.email;
         var credential = error.credential;
-        console.log(errorCode);
-        console.log(errorMessage);
-        console.log(email);
-        console.log(credential);
     }).then((e) => (checkUser(this.user)));
 }
 
@@ -117,6 +115,7 @@ function firebaseLogOut() {
     }
 }
 
+
 /**
  * Pushes a new user to database
  */
@@ -132,6 +131,7 @@ function newUser(user) {
     userRef.push(userInfo);
 }
 
+
 /**
  * checks to see if a user exist yet
  */
@@ -142,7 +142,6 @@ function checkUser(user) {
         if (snapshot.exists()) {
             console.log("Found");
         } else {
-            console.log("not found");
             newUser(user);
         }
     });
@@ -152,6 +151,7 @@ function checkUser(user) {
     v.id = user.id;
     userForum();
 }
+
 
 /**
  * Build the home HTML.
@@ -230,17 +230,20 @@ function appendRowToBody(id, data, newBody, boolean) {
 
 
     if (boolean) {
-        let del = document.createElement("INPUT");
-        let p = document.createElement("p");
-        p.setAttribute("class", "delete");
+        var del = document.createElement("INPUT");
         del.setAttribute("class", "delete");
         del.setAttribute("type", "button");
         del.setAttribute("value", "DELETE");
+        var delTd = document.createElement("TD");
+        delTd.setAttribute("class", "delete");
+
         del.addEventListener('click', function () {
             delDB(id);
         });
-        p.appendChild(del);
-        row.appendChild(p);
+
+        delTd.appendChild(del);
+        row.appendChild(delTd);
+
     } else {
         var colText = document.createTextNode(data.op_name);
         col.appendChild(colText);
@@ -265,11 +268,23 @@ function appendRowToBody(id, data, newBody, boolean) {
 
 }
 
+
+/**
+ * Deletes an entry in db.
+ * 
+ * @param {*} id 
+ */
 function delDB(id) {
     const rootRef = firebase.database().ref();
     rootRef.child("forums").child(id).remove();
 }
 
+
+/**
+ * Deletes a div.
+ * 
+ * @param {*} id 
+ */
 function delDiv(id) {
     let row = document.getElementById(id);
     while (row) {
@@ -279,6 +294,10 @@ function delDiv(id) {
 
 }
 
+
+/**
+ * Listener for user page table.
+ */
 function userForum() {
     const rootRef = firebase.database().ref();
     var forumRef = rootRef.child("forums");
@@ -287,7 +306,6 @@ function userForum() {
     var newBody = document.createElement("TBODY");
     newBody.setAttribute("id", "user-body");
 
-    // TODO: Get all posts and search for similar strings in body and titles.
     forumRef.orderByChild("op_id").equalTo(v.id).on("child_added", function (snapshot) {
         snap = snapshot.key;
         appendRowToBody(snap, snapshot.val(), newBody, true);
