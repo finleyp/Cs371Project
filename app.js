@@ -1,5 +1,3 @@
-
-
 /**                                                                                                                                          
  * Setup the firebase database and its reference objects.                                                                                    
  */
@@ -40,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     //user login
     var user = null;
-    
+
     homeTable.replaceChild(newBody, oldBody);
 });
 
@@ -208,33 +206,47 @@ function searchForForum(inputStr) {
  */
 function appendRowToBody(id, data, newBody, boolean) {
 
+    // Insert newest entries first.
+    var firstRow = null;
+    var count = newBody.getElementsByTagName("TR").length;
+
+    if (count > 0) {
+        firstRow = newBody.firstChild;
+    }
+
     // Row for search results.
     var row = document.createElement("TR");
     row.setAttribute("id", id);
-    newBody.appendChild(row);
+
+    if (firstRow) {
+        newBody.insertBefore(row, firstRow);
+    } else {
+        newBody.appendChild(row);
+
+    }
 
     // Data for title of forum.
     var col = document.createElement("TD");
-    
+
 
     if (boolean) {
         let del = document.createElement("INPUT");
         let p = document.createElement("p");
-        p.setAttribute("class","delete");
-        del.setAttribute("class","delete");
+        p.setAttribute("class", "delete");
+        del.setAttribute("class", "delete");
         del.setAttribute("type", "button");
         del.setAttribute("value", "DELETE");
-        del.addEventListener('click', function(){
+        del.addEventListener('click', function () {
             delDB(id);
         });
         p.appendChild(del);
         row.appendChild(p);
-    }else{
-    var colText = document.createTextNode(data.op_name);
-    col.appendChild(colText);
-    row.appendChild(col);
+    } else {
+        var colText = document.createTextNode(data.op_name);
+        col.appendChild(colText);
+        row.appendChild(col);
     }
-    
+
     // Data for title of forum.
     col = document.createElement("TD");
     row.appendChild(col);
@@ -253,18 +265,18 @@ function appendRowToBody(id, data, newBody, boolean) {
 
 }
 
-function delDB(id){
+function delDB(id) {
     const rootRef = firebase.database().ref();
-    rootRef.child("forums").child(id).remove();  
+    rootRef.child("forums").child(id).remove();
 }
 
-function delDiv(id){
+function delDiv(id) {
     let row = document.getElementById(id);
-    while(row){
-    row.parentNode.removeChild(row);
-    row = document.getElementById(id);
+    while (row) {
+        row.parentNode.removeChild(row);
+        row = document.getElementById(id);
     }
-    
+
 }
 
 function userForum() {
