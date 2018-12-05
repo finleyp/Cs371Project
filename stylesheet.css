@@ -37,6 +37,10 @@ tr:nth-child(even) {
     color: white;
 }
 
+.delete {
+    text-align: center;
+}
+
 .col-body {
     text-align: left;
 }

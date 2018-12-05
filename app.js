@@ -16,6 +16,9 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     firebase.initializeApp(config);
 
+    //used for current snapshot object
+    var snap = null;
+
     // Create reference to root of database                                                                                                  
     const forumRef = firebase.database().ref().child('forums');
     var homeTable = document.getElementById("home-table");
@@ -25,15 +28,18 @@ document.addEventListener("DOMContentLoaded", function () {
     // Update table when child is added.                                                                                                     
     forumRef.on('child_added', snapshot => {
         console.log("Forum child added.");
-        appendRowToBody(snapshot.val(), newBody);
+        snap = snapshot.key;
+        appendRowToBody(snap, snapshot.val(), newBody, false);
     });
-    
+
     // Update table when child is removed.                                                                                                   
     forumRef.on('child_removed', snapshot => {
         console.log("Forum child removed.");
     });
-
+    //user login
     var user = null;
+
+    
     homeTable.replaceChild(newBody, oldBody);
 });
 
@@ -64,12 +70,12 @@ function submitPost(title, body) {
 /**
  * Lets a user sign in with a google pop up
  */
-function googleAuth(){
+function googleAuth() {
     var provider = new firebase.auth.GoogleAuthProvider();
-    
-    firebase.auth().signInWithPopup(provider).then(function(result) {
+
+    firebase.auth().signInWithPopup(provider).then(function (result) {
         this.user = result.additionalUserInfo.profile;
-      }).catch(function(error) {
+    }).catch(function (error) {
         var errorCode = error.code;
         var errorMessage = error.message;
         var email = error.email;
@@ -78,14 +84,14 @@ function googleAuth(){
         console.log(errorMessage);
         console.log(email);
         console.log(credential);
-      }).then((e) => (checkUser(this.user)));
+    }).then((e) => (checkUser(this.user)));
 }
 
 /**
  * returns if the user is signed in or not
  */
-function loggedIn(){
-    if(this.user == null){
+function loggedIn() {
+    if (this.user == null) {
         return false;
     }
     return true;
@@ -95,23 +101,27 @@ function loggedIn(){
 /**
  * signs a user out
  */
-function firebaseLogOut(){
-    firebase.auth().signOut().then(function() {
+function firebaseLogOut() {
+    firebase.auth().signOut().then(function () {
         console.log("Sign out successful");
         this.user = null;
-      }).catch(function(error) {
+    }).catch(function (error) {
         console.log(error);
-      });
-      v.name = '';
-      v.email = '';
-      v.pic = null;
-      v.id = null;
+    });
+    v.name = '';
+    v.email = '';
+    v.pic = null;
+    v.id = null;
+    let body = document.getElementById("user-body");
+    while (body.firstChild) {
+        body.removeChild(body.firstChild);
+    }
 }
 
 /**
  * Pushes a new user to database
  */
-function newUser(user){
+function newUser(user) {
     const rootRef = firebase.database().ref();
     let userRef = rootRef.child("users");
     let userInfo = {
@@ -126,14 +136,13 @@ function newUser(user){
 /**
  * checks to see if a user exist yet
  */
-function checkUser(user){
+function checkUser(user) {
     const rootRef = firebase.database().ref();
     let userRef = rootRef.child("users");
-    console.log("here");
-    userRef.orderByChild("email").equalTo(user.email).once("value").then(function (snapshot){
-        if(snapshot.exists()){
+    userRef.orderByChild("email").equalTo(user.email).once("value").then(function (snapshot) {
+        if (snapshot.exists()) {
             console.log("Found");
-        }else{
+        } else {
             console.log("not found");
             newUser(user);
         }
@@ -142,6 +151,7 @@ function checkUser(user){
     v.email = user.email;
     v.pic = user.picture;
     v.id = user.id;
+    userForum();
 }
 
 /**
@@ -181,7 +191,8 @@ function searchForForum(inputStr) {
 
     // TODO: Get all posts and search for similar strings in body and titles.
     forumRef.orderByChild("title").startAt(inputStr).endAt(inputStr + "\uf8ff").on("child_added", function (snapshot) {
-        appendRowToBody(snapshot.val(), newBody);
+        snap = snapshot.key;
+        appendRowToBody(snap, snapshot.val(), newBody, false);
     });
 
     resultTable.replaceChild(newBody, oldBody);
@@ -194,10 +205,11 @@ function searchForForum(inputStr) {
  * 
  * @param {Object} data 
  */
-function appendRowToBody(data, newBody) {
+function appendRowToBody(id, data, newBody, boolean) {
 
     // Row for search results.
     var row = document.createElement("TR");
+    row.setAttribute("id", id);
     newBody.appendChild(row);
 
     // Data for title of forum.
@@ -206,7 +218,8 @@ function appendRowToBody(data, newBody) {
 
     var colText = document.createTextNode(data.op_name);
     col.appendChild(colText);
-     // Data for title of forum.
+
+    // Data for title of forum.
     col = document.createElement("TD");
     row.appendChild(col);
 
@@ -221,9 +234,35 @@ function appendRowToBody(data, newBody) {
     // Body text in column.
     colText = document.createTextNode(data.body);
     col.appendChild(colText);
+
+    if (boolean) {
+        let del = document.createElement("INPUT");
+        del.setAttribute("class","delete");
+        del.setAttribute("type", "button");
+        del.setAttribute("value", "DELETE");
+        del.addEventListener('click', function(){
+            delDB(id);
+        });
+        row.appendChild(del);
+    }
 }
 
-function userForum(){
+function delDB(id){
+    const rootRef = firebase.database().ref();
+    rootRef.child("forums").child(id).remove();  
+    delDiv(id);
+}
+
+function delDiv(id){
+    let row = document.getElementById(id);
+    while(row){
+    row.parentNode.removeChild(row);
+    row = document.getElementById(id);
+    }
+    
+}
+
+function userForum() {
     const rootRef = firebase.database().ref();
     var forumRef = rootRef.child("forums");
     var userTable = document.getElementById("user-table");
@@ -233,7 +272,8 @@ function userForum(){
 
     // TODO: Get all posts and search for similar strings in body and titles.
     forumRef.orderByChild("op_id").equalTo(v.id).on("child_added", function (snapshot) {
-        appendRowToBody(snapshot.val(), newBody);
+        snap = snapshot.key;
+        appendRowToBody(snap, snapshot.val(), newBody, true);
     });
 
     userTable.replaceChild(newBody, oldBody);
