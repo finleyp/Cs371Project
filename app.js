@@ -35,6 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Update table when child is removed.                                                                                                   
     forumRef.on('child_removed', snapshot => {
         console.log("Forum child removed.");
+        console.log(snapshot.key);
+        delDiv(snapshot.key);
     });
     //user login
     var user = null;
@@ -250,7 +252,6 @@ function appendRowToBody(id, data, newBody, boolean) {
 function delDB(id){
     const rootRef = firebase.database().ref();
     rootRef.child("forums").child(id).remove();  
-    delDiv(id);
 }
 
 function delDiv(id){
