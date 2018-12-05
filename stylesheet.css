@@ -73,8 +73,12 @@ tr:nth-child(even) {
     text-align: center;
 }
 
+.left{
+    float: left;
+}
+
 .searchBar {
-    background-color: gray;
+    padding: 17px;
     color: white;
     overflow: hidden;
     text-align: center;

@@ -216,11 +216,26 @@ function appendRowToBody(id, data, newBody, boolean) {
 
     // Data for title of forum.
     var col = document.createElement("TD");
-    row.appendChild(col);
+    
 
+    if (boolean) {
+        let del = document.createElement("INPUT");
+        let p = document.createElement("p");
+        p.setAttribute("class","delete");
+        del.setAttribute("class","delete");
+        del.setAttribute("type", "button");
+        del.setAttribute("value", "DELETE");
+        del.addEventListener('click', function(){
+            delDB(id);
+        });
+        p.appendChild(del);
+        row.appendChild(p);
+    }else{
     var colText = document.createTextNode(data.op_name);
     col.appendChild(colText);
-
+    row.appendChild(col);
+    }
+    
     // Data for title of forum.
     col = document.createElement("TD");
     row.appendChild(col);
@@ -237,19 +252,6 @@ function appendRowToBody(id, data, newBody, boolean) {
     colText = document.createTextNode(data.body);
     col.appendChild(colText);
 
-    if (boolean) {
-        let del = document.createElement("INPUT");
-        let p = document.createElement("p");
-        p.setAttribute("class","delete");
-        del.setAttribute("class","delete");
-        del.setAttribute("type", "button");
-        del.setAttribute("value", "DELETE");
-        del.addEventListener('click', function(){
-            delDB(id);
-        });
-        p.appendChild(del);
-        row.appendChild(p);
-    }
 }
 
 function delDB(id){
