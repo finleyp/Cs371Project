@@ -29,11 +29,16 @@
       <v-btn id="search-button" depressed small round color="grey" @click="searchForums">
         <v-icon dark>search</v-icon>
       </v-btn>
-      <v-btn id="login-button" depressed small round color="grey" @click="logToggle">
-        <v-icon dark>person</v-icon>
+      <v-btn id="home-button" depressed small round color="grey" @click="setHome">
+        <v-icon dark>home</v-icon>
       </v-btn>
+      <v-btn id="login-button" depressed small round color="grey" @click="logToggle">
+          <v-icon dark>person</v-icon>
+        </v-btn>
+        <v-btn id="user-button" depressed small round color="grey" @click="userPage">
+          <v-icon dark>subject</v-icon>
+        </v-btn>
     </div>
-
     <v-btn @click="forumPost">New Post</v-btn>
     <div id="new-forum" class="hidden">
 
@@ -52,50 +57,90 @@
       </v-container>
     </div>
 
-  </div>
-
   <div id="results-div" class="hidden">
+      <br>
+      <h2 class="results-h">Results</h2>
+      <hr><br>
+      <table id="results-table">
+          <col width="100">
+          <col width="200">
+          <col width="600">
+        <thead>
+          <tr>
+            <th>Posted By</th>
+            <th>Title</th>
+            <th>Body</th>
+          </tr>
+        </thead>
+        <tbody id="result-body"></tbody>
+      </table>
+    </div>
+  <div id="home" class="hidden">
     <br>
-    <h2 class="results-h">Results</h2>
+    <h2 class="results-h">Home</h2>
     <hr><br>
-    <table id="results-table">
-      <tr>
-        <th>Title</th>
-        <th>Body</th>
-      </tr>
+    <table id="home-table">
+      <thead>
+        <tr>
+          <th>Posted By</th>
+          <th>Title</th>
+          <th>Body</th>
+        </tr>
+      </thead>
+      <tbody id="home-body"></tbody>
     </table>
   </div>
-
-
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
-  <script>
-    new Vue({
-      el: '#app',
-      data: {
-        title: "FORUM.RS",
-        postTitle: '',
-        postBody: '',
-        searchInput: '',
-        email: '',
-        password: ''
-      },
-      methods: {
-        forumPost() {
-          if (loggedIn()) {
-            console.log("GOOD TO GO LOGGED IN MATE");
+  <div id="user-info" class="hidden">
+    <h2>User Information</h2>
+    <br>
+    <label><b>Name: </b>{{ name }}</label><br>
+    <label><b>Email: </b>{{ email }}</label><br>
+    <img v-bind:src="pic" width="200" height="200" >
+    <table id="user-table">
+        <thead>
+          <tr>
+            <th>Posted By</th>
+            <th>Title</th>
+            <th>Body</th>
+          </tr>
+        </thead>
+        <tbody id="user-body"></tbody>
+      </table>
+  </div>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+<script>
+  let v = new Vue({
+    el: '#app',
+    data: {
+      title: "FORUM.RS",
+      postTitle: '',
+      postBody: '',
+      searchInput: '',
+      email: '',
+      password: '',
+      name: '',
+      pic: null,
+      id: null
+    },
+    methods: {
+      forumPost() {
+          this.user = loggedIn();
+          if (this.user) {
+            console.log(`GOOD TO GO MATE LOGGED IN AS ${this.user.id}`);
             var forumDiv = document.getElementById("new-forum");
             // TODO: Hide all other divs with elements that need to be hidden.
             forumDiv.classList.remove('hidden');
           } else {
             alert("Please log in to submit a post.");
           }
-
         },
         submitForumPost() {
           if (this.postTitle.length > 0 && this.postBody.length != 0) {
-            console.log("Good to go");
-            submitPost(this.postTitle, this.postBody);
+            console.log(`user in vue = ${this.user}`);
+            submitPost(this.postTitle, this.postBody, this.user);
             this.cancelForumPost();
           }
         },
@@ -107,20 +152,40 @@
         },
         searchForums() {
           searchForForum(this.searchInput);
+          let homeDiv = document.getElementById("home")
+        homeDiv.classList.add('hidden');
+        let userDiv = document.getElementById("user-info");
+        userDiv.classList.add('hidden');
+        let searDiv = document.getElementById("results-div");
+        searDiv.classList.remove('hidden');
         },
-        logToggle() {
-          if (loggedIn()) {
+      logToggle(){
+          if(loggedIn()){
             console.log("sign out");
             firebaseLogOut();
-          } else {
+          }else{
             console.log("sign in");
             googleAuth();
           }
-        }
-
+        },
+      userPage(){
+        let userDiv = document.getElementById("user-info");
+        userDiv.classList.remove('hidden');
+        let homeDiv = document.getElementById("home");
+        homeDiv.classList.add('hidden');
+        let searDiv = document.getElementById("results-div");
+        searDiv.classList.add('hidden');
+        userForum();
+      },
+      setHome(){
+        let homeDiv = document.getElementById("home")
+        homeDiv.classList.remove('hidden');
+        let userDiv = document.getElementById("user-info");
+        userDiv.classList.add('hidden');
+        let searDiv = document.getElementById("results-div");
+        searDiv.classList.add('hidden');
       }
-    })
-  </script>
-</body>
-
+    }
+  })
+</script>
 </html>
