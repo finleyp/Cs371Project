@@ -3,7 +3,7 @@
 /**                                                                                                                                          
  * Setup the firebase database and its reference objects.                                                                                    
  */
-(function () {
+document.addEventListener("DOMContentLoaded", function () {
 
     // Initialize Database                                                                                                                   
     var config = {
@@ -18,21 +18,24 @@
 
     // Create reference to root of database                                                                                                  
     const forumRef = firebase.database().ref().child('forums');
-
+    var homeTable = document.getElementById("home-table");
+    var oldBody = document.getElementById("home-body");
+    var newBody = document.createElement("TBODY");
+    newBody.setAttribute("id", "home-body");
     // Update table when child is added.                                                                                                     
     forumRef.on('child_added', snapshot => {
         console.log("Forum child added.");
+        appendRowToBody(snapshot.val(), newBody);
     });
-
+    
     // Update table when child is removed.                                                                                                   
     forumRef.on('child_removed', snapshot => {
         console.log("Forum child removed.");
     });
 
     var user = null;
-    
-}());
-
+    homeTable.replaceChild(newBody, oldBody);
+});
 
 /**
  * Build the forum creation page.
