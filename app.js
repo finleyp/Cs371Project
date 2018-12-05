@@ -177,7 +177,7 @@ function searchForForum(inputStr) {
     newBody.setAttribute("id", "result-body");
 
     // TODO: Get all posts and search for similar strings in body and titles.
-    forumRef.orderByChild("title").equalTo(inputStr).on("child_added", function (snapshot) {
+    forumRef.orderByChild("title").startAt(inputStr).endAt(inputStr + "\uf8ff").on("child_added", function (snapshot) {
         appendRowToBody(snapshot.val(), newBody);
     });
 

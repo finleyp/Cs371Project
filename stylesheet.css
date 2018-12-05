@@ -22,6 +22,25 @@ td {
     text-align: center;
 }
 
+table {
+    table-layout: fixed;
+    width: 1000px;
+}
+
+tr:nth-child(odd) {
+    background-color: #bcbabe;
+    color: #021C1E;
+}
+
+tr:nth-child(even) {
+    background-color: firebrick;
+    color: white;
+}
+
+.col-body {
+    text-align: left;
+}
+
 .results-h {
     text-align: center;
 }
@@ -65,4 +84,3 @@ td {
     padding-bottom: 5px;
     border-radius: 20px;
 }
-

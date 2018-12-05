@@ -9,6 +9,9 @@
   <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta name="google-signin-client_id" content="cis-371-forum.apps.googleusercontent.com">
+  </meta>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
   <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>-->
   <!--<script src="onready.js"></script>-->
   <script src="app.js"></script>
@@ -59,8 +62,12 @@
       <h2 class="results-h">Results</h2>
       <hr><br>
       <table id="results-table">
+          <col width="100">
+          <col width="200">
+          <col width="600">
         <thead>
           <tr>
+            <th>Posted By</th>
             <th>Title</th>
             <th>Body</th>
           </tr>
@@ -120,21 +127,20 @@
     },
     methods: {
       forumPost() {
-        var forumDiv = document.getElementById("new-forum");
-        // TODO: Hide all other divs with elements that need to be hidden.
-        forumDiv.classList.remove('hidden');
-        if (loggedIn()) {
-            console.log("GOOD TO GO LOGGED IN MATE");
+          this.user = loggedIn();
+          if (this.user) {
+            console.log(`GOOD TO GO MATE LOGGED IN AS ${this.user.id}`);
             var forumDiv = document.getElementById("new-forum");
             // TODO: Hide all other divs with elements that need to be hidden.
             forumDiv.classList.remove('hidden');
           } else {
             alert("Please log in to submit a post.");
           }
-      },
-      submitForumPost() {
+        },
+        submitForumPost() {
           if (this.postTitle.length > 0 && this.postBody.length != 0) {
-            submitPost(this.postTitle, this.postBody);
+            console.log(`user in vue = ${this.user}`);
+            submitPost(this.postTitle, this.postBody, this.user);
             this.cancelForumPost();
           }
         },
