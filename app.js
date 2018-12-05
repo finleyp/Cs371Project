@@ -1,5 +1,3 @@
-
-
 /**                                                                                                                                          
  * Setup the firebase database and its reference objects.                                                                                    
  */
@@ -30,7 +28,7 @@
     });
 
     var user = null;
-    
+
 }());
 
 
@@ -61,12 +59,12 @@ function submitPost(title, body) {
 /**
  * Lets a user sign in with a google pop up
  */
-function googleAuth(){
+function googleAuth() {
     var provider = new firebase.auth.GoogleAuthProvider();
-    
-    firebase.auth().signInWithPopup(provider).then(function(result) {
+
+    firebase.auth().signInWithPopup(provider).then(function (result) {
         this.user = result.additionalUserInfo.profile;
-      }).catch(function(error) {
+    }).catch(function (error) {
         var errorCode = error.code;
         var errorMessage = error.message;
         var email = error.email;
@@ -75,40 +73,40 @@ function googleAuth(){
         console.log(errorMessage);
         console.log(email);
         console.log(credential);
-      }).then((e) => (checkUser(this.user)));
+    }).then((e) => (checkUser(this.user)));
 }
 
 /**
  * returns if the user is signed in or not
  */
-function loggedIn(){
-    if(this.user == null){
+function loggedIn() {
+    if (this.user == null) {
         return false;
     }
-    return true;
+    return this.user;
 }
 
 
 /**
  * signs a user out
  */
-function firebaseLogOut(){
-    firebase.auth().signOut().then(function() {
+function firebaseLogOut() {
+    firebase.auth().signOut().then(function () {
         console.log("Sign out successful");
         this.user = null;
-      }).catch(function(error) {
+    }).catch(function (error) {
         console.log(error);
-      });
-      v.name = '';
-      v.email = '';
-      v.pic = null;
-      v.id = null;
+    });
+    v.name = '';
+    v.email = '';
+    v.pic = null;
+    v.id = null;
 }
 
 /**
  * Pushes a new user to database
  */
-function newUser(user){
+function newUser(user) {
     const rootRef = firebase.database().ref();
     let userRef = rootRef.child("users");
     let userInfo = {
@@ -123,14 +121,14 @@ function newUser(user){
 /**
  * checks to see if a user exist yet
  */
-function checkUser(user){
+function checkUser(user) {
     const rootRef = firebase.database().ref();
     let userRef = rootRef.child("users");
     console.log("here");
-    userRef.orderByChild("email").equalTo(user.email).once("value").then(function (snapshot){
-        if(snapshot.exists()){
+    userRef.orderByChild("email").equalTo(user.email).once("value").then(function (snapshot) {
+        if (snapshot.exists()) {
             console.log("Found");
-        }else{
+        } else {
             console.log("not found");
             newUser(user);
         }
@@ -203,7 +201,7 @@ function appendRowToBody(data, newBody) {
 
     var colText = document.createTextNode(data.op_name);
     col.appendChild(colText);
-     // Data for title of forum.
+    // Data for title of forum.
     col = document.createElement("TD");
     row.appendChild(col);
 
@@ -220,7 +218,7 @@ function appendRowToBody(data, newBody) {
     col.appendChild(colText);
 }
 
-function userForum(){
+function userForum() {
     const rootRef = firebase.database().ref();
     var forumRef = rootRef.child("forums");
     var userTable = document.getElementById("user-table");

@@ -20,12 +20,13 @@
 
 <body>
   <div id="app">
+
     <div class="navBar">
       <p>{{ title }}</p>
     </div>
+
     <div class="searchBar">
       <input v-model="searchInput" class="searchInput" placeholder="Seach">
-      <!-- <v-btn id="search-button" @click="searchForums">Search</v-btn> -->
       <v-btn id="search-button" depressed small round color="grey" @click="searchForums">
         <v-icon dark>search</v-icon>
       </v-btn>
@@ -33,15 +34,16 @@
         <v-icon dark>home</v-icon>
       </v-btn>
       <v-btn id="login-button" depressed small round color="grey" @click="logToggle">
-          <v-icon dark>person</v-icon>
-        </v-btn>
-        <v-btn id="user-button" depressed small round color="grey" @click="userPage">
-          <v-icon dark>subject</v-icon>
-        </v-btn>
+        <v-icon dark>person</v-icon>
+      </v-btn>
+      <v-btn id="user-button" depressed small round color="grey" @click="userPage">
+        <v-icon dark>subject</v-icon>
+      </v-btn>
     </div>
-    <v-btn @click="forumPost">New Post</v-btn>
-    <div id="new-forum" class="hidden">
 
+    <v-btn @click="forumPost">New Post</v-btn>
+
+    <div id="new-forum" class="hidden">
       <v-container fill-height red darken-2>
         <v-layout id="titleEntry" row>
           <v-container fluid grey lighten-2>
@@ -57,14 +59,14 @@
       </v-container>
     </div>
 
-  <div id="results-div" class="hidden">
+    <div id="results-div" class="hidden">
       <br>
       <h2 class="results-h">Results</h2>
       <hr><br>
       <table id="results-table">
-          <col width="100">
-          <col width="200">
-          <col width="600">
+        <col width="100">
+        <col width="200">
+        <col width="600">
         <thead>
           <tr>
             <th>Posted By</th>
@@ -75,28 +77,31 @@
         <tbody id="result-body"></tbody>
       </table>
     </div>
-  <div id="home" class="hidden">
-    <br>
-    <h2 class="results-h">Home</h2>
-    <hr><br>
-    <table id="home-table">
-      <thead>
-        <tr>
-          <th>Posted By</th>
-          <th>Title</th>
-          <th>Body</th>
-        </tr>
-      </thead>
-      <tbody id="home-body"></tbody>
-    </table>
-  </div>
-  <div id="user-info" class="hidden">
-    <h2>User Information</h2>
-    <br>
-    <label><b>Name: </b>{{ name }}</label><br>
-    <label><b>Email: </b>{{ email }}</label><br>
-    <img v-bind:src="pic" width="200" height="200" >
-    <table id="user-table">
+
+    <!-- <div id="home" class="hidden"> -->
+    <div id="home">
+      <br>
+      <h2 class="results-h">Home</h2>
+      <hr><br>
+      <table id="home-table">
+        <thead>
+          <tr>
+            <th>Posted By</th>
+            <th>Title</th>
+            <th>Body</th>
+          </tr>
+        </thead>
+        <tbody id="home-body"></tbody>
+      </table>
+    </div>
+
+    <div id="user-info" class="hidden">
+      <h2>User Information</h2>
+      <br>
+      <label><b>Name: </b>{{ name }}</label><br>
+      <label><b>Email: </b>{{ email }}</label><br>
+      <img v-bind:src="pic" width="200" height="200">
+      <table id="user-table">
         <thead>
           <tr>
             <th>Posted By</th>
@@ -106,9 +111,11 @@
         </thead>
         <tbody id="user-body"></tbody>
       </table>
+    </div>
+
   </div>
-</div>
 </body>
+
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
 <script>
@@ -127,57 +134,65 @@
     },
     methods: {
       forumPost() {
-          this.user = loggedIn();
-          if (this.user) {
-            console.log(`GOOD TO GO MATE LOGGED IN AS ${this.user.id}`);
-            var forumDiv = document.getElementById("new-forum");
-            // TODO: Hide all other divs with elements that need to be hidden.
-            forumDiv.classList.remove('hidden');
-          } else {
-            alert("Please log in to submit a post.");
-          }
-        },
-        submitForumPost() {
-          if (this.postTitle.length > 0 && this.postBody.length != 0) {
-            console.log(`user in vue = ${this.user}`);
-            submitPost(this.postTitle, this.postBody, this.user);
-            this.cancelForumPost();
-          }
-        },
-        cancelForumPost() {
-          this.postTitle = '';
-          this.postBody = '';
+        this.user = loggedIn();
+        if (this.user) {
           var forumDiv = document.getElementById("new-forum");
-          forumDiv.classList.add('hidden');
-        },
-        searchForums() {
-          searchForForum(this.searchInput);
+          var resultsDiv = document.getElementById("results-div");
+          // TODO: Hide all other divs with elements that need to be hidden.
           let homeDiv = document.getElementById("home")
+          homeDiv.classList.add('hidden');
+          resultsDiv.classList.add('hidden');
+          forumDiv.classList.remove('hidden');
+        } else {
+          alert("Please log in to submit a post.");
+        }
+      },
+      submitForumPost() {
+        if (this.postTitle.length > 0 && this.postBody.length != 0) {
+          console.log(`user in vue = ${this.user}`);
+          submitPost(this.postTitle, this.postBody, this.user);
+          this.cancelForumPost();
+        }
+      },
+      cancelForumPost() {
+        this.postTitle = '';
+        this.postBody = '';
+        var forumDiv = document.getElementById("new-forum");
+        forumDiv.classList.add('hidden');
+        this.setHome();
+      },
+      searchForums() {
+        searchForForum(this.searchInput);
+        let homeDiv = document.getElementById("home")
         homeDiv.classList.add('hidden');
         let userDiv = document.getElementById("user-info");
         userDiv.classList.add('hidden');
         let searDiv = document.getElementById("results-div");
         searDiv.classList.remove('hidden');
-        },
-      logToggle(){
-          if(loggedIn()){
-            console.log("sign out");
-            firebaseLogOut();
-          }else{
-            console.log("sign in");
-            googleAuth();
-          }
-        },
-      userPage(){
-        let userDiv = document.getElementById("user-info");
-        userDiv.classList.remove('hidden');
-        let homeDiv = document.getElementById("home");
-        homeDiv.classList.add('hidden');
-        let searDiv = document.getElementById("results-div");
-        searDiv.classList.add('hidden');
-        userForum();
       },
-      setHome(){
+      logToggle() {
+        if (loggedIn()) {
+          console.log("sign out");
+          firebaseLogOut();
+        } else {
+          console.log("sign in");
+          googleAuth();
+        }
+      },
+      userPage() {
+        if (loggedIn()) {
+          let userDiv = document.getElementById("user-info");
+          userDiv.classList.remove('hidden');
+          let homeDiv = document.getElementById("home");
+          homeDiv.classList.add('hidden');
+          let searDiv = document.getElementById("results-div");
+          searDiv.classList.add('hidden');
+          userForum();
+        } else {
+          alert("Please log in to view your profile.");
+        }
+      },
+      setHome() {
         let homeDiv = document.getElementById("home")
         homeDiv.classList.remove('hidden');
         let userDiv = document.getElementById("user-info");
@@ -188,4 +203,5 @@
     }
   })
 </script>
+
 </html>
