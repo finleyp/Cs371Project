@@ -1,23 +1,149 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
 <html>
+
 <head>
-    <title>CIS371 Forum</title>
+  <meta charset="UTF-8" />
+  <link rel='stylesheet' type='text/css' href='stylesheet.css' />
+  <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>-->
+  <!--<script src="onready.js"></script>-->
+  <script src="app.js"></script>
+  <title>CIS371 Forum</title>
 </head>
+
 <body>
+  <div id="app">
+    <div class="navBar">
+      <p>{{ title }}</p>
+      <div class="dropdown">
+          <div class="dropdown__header" @click="toggleDropdown($event)">
+              <span>Header</span> text
+              <i class="fa fa-angle-down" aria-hidden="true"></i>
+              <i class="fa fa-angle-up" aria-hidden="true"></i>
+          </div>
+    </div>
+    <div class="searchBar">
+      <input v-model="searchInput" class="searchInput" placeholder="Seach">
+      <!-- <v-btn id="search-button" @click="searchForums">Search</v-btn> -->
+      <v-btn id="search-button" depressed small round color="grey" @click="searchForums">
+        <v-icon dark>search</v-icon>
+      </v-btn>
+      <v-btn id="home-button" depressed small round color="grey" @click="setHome">
+        <v-icon dark>home</v-icon>
+      </v-btn>
+      <v-btn id="login-button" depressed small round color="grey" @click="logToggle">
+          <v-icon dark>person</v-icon>
+        </v-btn>
+        <v-btn id="user-button" depressed small round color="grey" @click="userPage">
+          <v-icon dark>subject</v-icon>
+        </v-btn>
+    </div>
+    <v-btn @click="forumPost">New Post</v-btn>
+    <div id="new-forum" class="hidden">
 
+      <v-container fill-height red darken-2>
+        <v-layout id="titleEntry" row>
+          <v-container fluid grey lighten-2>
+            <h3>Title: {{ postTitle }}</h3>
+            <input v-model="postTitle" class="userInput" placeholder="Enter title">
+            <br><br>
+            <textarea v-model="postBody" class="userInput" placeholder="Enter body"></textarea>
+            <!--<v-btn id="submit-button" @click="submitForumPost" disabled>Submit</v-btn>-->
+            <v-btn id="submit-button" @click="submitForumPost">Submit</v-btn>
+            <v-btn @click="cancelForumPost">Cancel</v-btn>
+          </v-container>
+        </v-layout>
+      </v-container>
+    </div>
+    
+  </div>
+
+  <div id="results-div" class="hidden">
+      <br>
+      <h2 class="results-h">Results</h2>
+      <hr><br>
+      <table id="results-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Body</th>
+          </tr>
+        </thead>
+        <tbody id="result-body"></tbody>
+      </table>
+    </div>
+  <div id="home">
+
+  </div>
+  <div id="user-info" class="hidden">
+    <h2>User Information</h2>
+    <br>
+    <label><b>Name: </b>{{ name }}</label><br>
+    <label><b>Email: </b>{{ email }}</label><br>
+  </div>
+</div>
 </body>
-
-<script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
 <script>
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyBFkmGeQ0atLiNQFPtVpQpUBeQGnCPI1Fo",
-    authDomain: "cis-371-forum.firebaseapp.com",
-    databaseURL: "https://cis-371-forum.firebaseio.com",
-    projectId: "cis-371-forum",
-    storageBucket: "cis-371-forum.appspot.com",
-    messagingSenderId: "846182067183"
-  };
-  firebase.initializeApp(config);
+  let v = new Vue({
+    el: '#app',
+    data: {
+      title: "FORUM.RS",
+      postTitle: '',
+      postBody: '',
+      searchInput: '',
+      email: '',
+      password: '',
+      name: ''
+    },
+    methods: {
+      forumPost() {
+        var forumDiv = document.getElementById("new-forum");
+        // TODO: Hide all other divs with elements that need to be hidden.
+        forumDiv.classList.remove('hidden');
+      },
+      submitForumPost() {
+          if (this.postTitle.length > 0 && this.postBody.length != 0) {
+            submitPost(this.postTitle, this.postBody);
+            this.cancelForumPost();
+          }
+        },
+        cancelForumPost() {
+          this.postTitle = '';
+          this.postBody = '';
+          var forumDiv = document.getElementById("new-forum");
+          forumDiv.classList.add('hidden');
+        },
+        searchForums() {
+          searchForForum(this.searchInput);
+        },
+      logToggle(){
+          if(loggedIn()){
+            console.log("sign out");
+            firebaseLogOut();
+          }else{
+            console.log("sign in");
+            googleAuth();
+          }
+        },
+      userPage(){
+        let userDiv = document.getElementById("user-info");
+        userDiv.classList.remove('hidden');
+        let homeDiv = document.getElementById("home");
+        homeDiv.classList.add('hidden');
+      },
+      setHome(){
+        let homeDiv = document.getElementById("home")
+        homeDiv.classList.remove('hidden');
+        let userDiv = document.getElementById("user-info");
+        userDiv.classList.add('hidden');
+      }
+    }
+  })
 </script>
-
 </html>
