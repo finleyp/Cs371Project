@@ -239,13 +239,16 @@ function appendRowToBody(id, data, newBody, boolean) {
 
     if (boolean) {
         let del = document.createElement("INPUT");
+        let p = document.createElement("p");
+        p.setAttribute("class","delete");
         del.setAttribute("class","delete");
         del.setAttribute("type", "button");
         del.setAttribute("value", "DELETE");
         del.addEventListener('click', function(){
             delDB(id);
         });
-        row.appendChild(del);
+        p.appendChild(del);
+        row.appendChild(p);
     }
 }
 
