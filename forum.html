@@ -12,8 +12,6 @@
   <meta name="google-signin-client_id" content="cis-371-forum.apps.googleusercontent.com">
   </meta>
   <script src="https://apis.google.com/js/platform.js" async defer></script>
-  <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>-->
-  <!--<script src="onready.js"></script>-->
   <script src="app.js"></script>
   <title>CIS371 Forum</title>
 </head>
@@ -141,7 +139,6 @@
         if (this.user) {
           var forumDiv = document.getElementById("new-forum");
           var resultsDiv = document.getElementById("results-div");
-          // TODO: Hide all other divs with elements that need to be hidden.
           let homeDiv = document.getElementById("home")
           homeDiv.classList.add('hidden');
           resultsDiv.classList.add('hidden');

@@ -56,6 +56,7 @@ function submitPost(title, body) {
     forumRef.push().set(postObj);
 }
 
+
 /**
  * Lets a user sign in with a google pop up
  */
@@ -75,6 +76,7 @@ function googleAuth() {
         console.log(credential);
     }).then((e) => (checkUser(this.user)));
 }
+
 
 /**
  * returns if the user is signed in or not
@@ -103,6 +105,7 @@ function firebaseLogOut() {
     v.id = null;
 }
 
+
 /**
  * Pushes a new user to database
  */
@@ -117,6 +120,7 @@ function newUser(user) {
     };
     userRef.push(userInfo);
 }
+
 
 /**
  * checks to see if a user exist yet
@@ -161,6 +165,9 @@ function home() {
 }
 
 
+/**
+ * Add forums to home screen.
+ */
 function buildHomeScreen() {
     console.log("building home screen");
     const rootRef = firebase.database().ref();
@@ -233,6 +240,10 @@ function appendRowToBody(data, newBody) {
     col.appendChild(colText);
 }
 
+
+/**
+ * Gets forums that the user posted.
+ */
 function userForum() {
     const rootRef = firebase.database().ref();
     var forumRef = rootRef.child("forums");
