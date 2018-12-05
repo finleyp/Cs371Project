@@ -40,7 +40,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     //user login
     var user = null;
-
     
     homeTable.replaceChild(newBody, oldBody);
 });

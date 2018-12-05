@@ -21,13 +21,13 @@
 
     <div class="searchBar">
       <v-toolbar app dark color="gray">
-        <v-toolbar-title >{{title}}</v-toolbar-title>
+        <v-toolbar-title>{{title}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
           <div class="searchBar">
-              <v-btn depressed small round color="grey" @click="forumPost" >
-                  <v-icon dark>add</v-icon>
-              </v-btn>
+            <v-btn depressed small round color="grey" @click="forumPost">
+              <v-icon dark>add</v-icon>
+            </v-btn>
             <input v-model="searchInput" class="searchInput" placeholder="Seach">
             <v-btn id="search-button" depressed small round color="grey" @click="searchForums">
               <v-icon dark>search</v-icon>
@@ -43,10 +43,9 @@
             </v-btn>
           </div>
         </v-toolbar-items>
-        </v-toolbar> 
+      </v-toolbar>
     </div>
 
-    
     <br><br>
     <div id="new-forum" class="hidden">
       <v-container fill-height red darken-2>
@@ -81,31 +80,33 @@
         <tbody id="result-body"></tbody>
       </table>
     </div>
-  <div id="home">
-    <br>
-    <h2 class="results-h">Home</h2>
-    <hr><br>
-    <table id="home-table">
+
+    <div id="home">
+      <br>
+      <h2 class="results-h">Home</h2>
+      <hr><br>
+      <table id="home-table">
         <col width="100">
         <col width="200">
         <col width="600">
-      <thead>
-        <tr>
-          <th>Posted By</th>
-          <th>Title</th>
-          <th>Body</th>
-        </tr>
-      </thead>
-      <tbody id="home-body"></tbody>
-    </table>
-  </div>
-  <div id="user-info" class="hidden">
-    <h2>User Information</h2>
-    <br>
-    <label><b>Name: </b>{{ name }}</label><br>
-    <label><b>Email: </b>{{ email }}</label><br>
-    <img v-bind:src="pic" width="200" height="200" class="left" >
-    <table id="user-table">
+        <thead>
+          <tr>
+            <th>Posted By</th>
+            <th>Title</th>
+            <th>Body</th>
+          </tr>
+        </thead>
+        <tbody id="home-body"></tbody>
+      </table>
+    </div>
+
+    <div id="user-info" class="hidden">
+      <h2>User Information</h2>
+      <br>
+      <label><b>Name: </b>{{ name }}</label><br>
+      <label><b>Email: </b>{{ email }}</label><br>
+      <img v-bind:src="pic" width="200" height="200" class="left">
+      <table id="user-table">
         <col width="100">
         <col width="200">
         <col width="600">
@@ -151,10 +152,13 @@
         if (this.user) {
           var forumDiv = document.getElementById("new-forum");
           var resultsDiv = document.getElementById("results-div");
-          let homeDiv = document.getElementById("home")
+          var homeDiv = document.getElementById("home");
+          var userDiv = document.getElementById("user-info");
           homeDiv.classList.add('hidden');
           resultsDiv.classList.add('hidden');
+          userDiv.classList.add('hidden');
           forumDiv.classList.remove('hidden');
+
         } else {
           alert("Please log in to submit a post.");
         }
