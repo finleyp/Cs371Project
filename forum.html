@@ -51,7 +51,6 @@
             <input v-model="postTitle" class="userInput" placeholder="Enter title">
             <br><br>
             <textarea v-model="postBody" class="userInput" placeholder="Enter body"></textarea>
-            <!--<v-btn id="submit-button" @click="submitForumPost" disabled>Submit</v-btn>-->
             <v-btn id="submit-button" @click="submitForumPost">Submit</v-btn>
             <v-btn @click="cancelForumPost">Cancel</v-btn>
           </v-container>
@@ -78,7 +77,6 @@
       </table>
     </div>
 
-    <!-- <div id="home" class="hidden"> -->
     <div id="home">
       <br>
       <h2 class="results-h">Home</h2>
@@ -114,6 +112,11 @@
     </div>
 
   </div>
+
+  <script>
+    buildHomeScreen();
+  </script>
+
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -193,6 +196,7 @@
         }
       },
       setHome() {
+        // buildHomeScreen();
         let homeDiv = document.getElementById("home")
         homeDiv.classList.remove('hidden');
         let userDiv = document.getElementById("user-info");

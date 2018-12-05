@@ -139,6 +139,7 @@ function checkUser(user) {
     v.id = user.id;
 }
 
+
 /**
  * Build the home HTML.
  */
@@ -156,6 +157,20 @@ function home() {
             div.removeChild(div.firstChild);
         }
     }
+
+}
+
+
+function buildHomeScreen() {
+    console.log("building home screen");
+    const rootRef = firebase.database().ref();
+    var forumRef = rootRef.child("forums");
+
+    forumRef.on('child_added', snapshot => {
+        // console.log(snapshot.val());
+        var homeBody = document.getElementById("home-body");
+        appendRowToBody(snapshot.val(), homeBody);
+    });
 
 }
 
