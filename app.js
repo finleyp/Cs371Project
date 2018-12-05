@@ -107,7 +107,9 @@ function newUser(user){
     let userRef = rootRef.child("users");
     let userInfo = {
         "user": user.name,
-        "email": user.email
+        "email": user.email,
+        "id": user.id,
+        "pic": user.picture
     };
     userRef.push(userInfo);
 }
