@@ -25,7 +25,7 @@
         <v-spacer></v-spacer>
         <v-toolbar-items>
           <div class="searchBar">
-            <input v-model="searchInput" class="searchInput" placeholder="Seach">
+            <input v-model="searchInput" class="searchInput" placeholder="Search">
             <v-btn id="search-button" depressed small round color="grey" @click="searchForums">
               <v-icon dark>search</v-icon>
             </v-btn>
@@ -123,9 +123,9 @@
 
   </div>
 
-  <script>
+  <!-- <script>
     buildHomeScreen();
-  </script>
+  </script> -->
 
 </body>
 
@@ -158,7 +158,6 @@
           resultsDiv.classList.add('hidden');
           userDiv.classList.add('hidden');
           forumDiv.classList.remove('hidden');
-
         } else {
           alert("Please log in to submit a post.");
         }
@@ -184,10 +183,13 @@
         userDiv.classList.add('hidden');
         let searDiv = document.getElementById("results-div");
         searDiv.classList.remove('hidden');
+        this.toggle();
       },
       logToggle() {
         if (loggedIn()) {
           firebaseLogOut();
+          this.setHome();
+          alert("You have successfully signed out!")
         } else {
           googleAuth();
         }
@@ -201,6 +203,7 @@
           let searDiv = document.getElementById("results-div");
           searDiv.classList.add('hidden');
           userForum();
+          this.toggle();
         } else {
           alert("Please log in to view your profile.");
         }
@@ -213,6 +216,13 @@
         userDiv.classList.add('hidden');
         let searDiv = document.getElementById("results-div");
         searDiv.classList.add('hidden');
+        this.toggle();
+      },
+      toggle(){
+        this.postTitle = '';
+        this.postBody = '';
+        var forumDiv = document.getElementById("new-forum");
+        forumDiv.classList.add('hidden');
       }
     }
   })
